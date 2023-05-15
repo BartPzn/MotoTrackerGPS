@@ -1,0 +1,48 @@
+﻿@model TrackerGPS
+
+@{
+    ViewData["Title"] = "Tracker View";
+}
+
+
+@*a to jest komentarz *@
+
+<div class="text-center">
+    <h1 class="display-4">Informacje o Trackerze</h1>
+</div>
+
+<div class="row">
+    <div class="col-sm-6">
+        <h3>Dane Tracker'a</h3>
+        <p>ID: @Model.ID</p>
+        <p>Nazwa: @Model.TrackerName</p>
+        <p>Opis: @Model.Description</p>
+    </div>
+    <div class="col-sm-6">
+        <h3>Pozycja Tracker'a</h3>
+
+        <script>
+            function initMap() {
+                // pobierz aktualne położenie tracker'a z serwera
+                var latitude = @Model.TrackingData.Last().Latitude;
+                var longitude = @Model.TrackingData.Last().Longitude;
+
+                // stwórz obiekt mapy Google
+                var map = new google.maps.Map(document.getElementById("map"), {
+                    center: { lat: latitude, lng: longitude },
+                    zoom: 12,
+                });
+
+                // dodaj marker na mapie
+                var marker = new google.maps.Marker({
+                    position: { lat: latitude, lng: longitude },
+                    map: map,
+                });
+            }
+        </script>
+
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBe826DQzgB05KluPN4pzJSwWAmmg5oRZQ&callback=initMap"
+                async defer></script>
+
+    </div>
+</div>

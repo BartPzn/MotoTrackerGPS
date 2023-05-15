@@ -1,0 +1,144 @@
+﻿
+@{
+    ViewData["Title"] = "Dashboard";
+}
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
+              crossorigin="anonymous" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+    <title>OpenStreetMap with Leaflet</title>
+    <!-- dodaj link do biblioteki Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha384-ZRLmfqpJ1n2Gk49BE8tkIZz5ZfS5Uv94TpWpFN8D4/M6pk3f4vC2QwW8fd5z5o5S" crossorigin="" />
+    <!-- dodaj link do pliku JS z biblioteką Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha384-XyGxPONfCt8sQs2zFJNCfKRtX9T/bIog/+tLzCtKjhvHnSMwzd8+Z72lJ3qzrQ1u" crossorigin=""></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNS0N7P"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+
+    <script>$(document).ready(function () {
+            $('#addTrackerBtn').click(function () {
+                var trackerName = $('#trackerName').val();
+                var trackerIP = $('#trackerIP').val();
+                var trackerPort = $('#trackerPort').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/TrackerGPS/AddTracker',
+                    data: { trackerName: trackerName, trackerIP: trackerIP, trackerPort: trackerPort },
+                    success: function () {
+                        location.reload();
+                    }
+                });
+            });
+        });</script>
+</head>
+<h1>Welcome to the Dashboard</h1>
+<p>Here you can access all your important information.</p>
+
+<div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+    <a class="btn btn-secondary" href="/">Home</a>
+    <a class="btn btn-secondary" href="TrackerView">Configure Tracker</a>
+    <a class="btn btn-secondary" href="TrackerGps/TrackerList">Trackers List</a>
+    <div class="btn-group" role="group">
+        <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Dropdown
+        </button>
+        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <a class="dropdown-item" href="#">Dropdown link</a>
+            <a class="dropdown-item" href="#">Dropdown link</a>
+        </div>
+    </div>
+</div>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Wybierz co chcesz zrobić</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th><a asp-controller="TrackerGPS" asp-action="TrackerList" class="btn btn-primary btn-sm" button id="btn btn-primary btn-sm">TrackerList</a></th>
+                        <th><a asp-controller="TrackerGPS" asp-action="AddTracker" class="btn btn-danger btn-sm" button id="btn btn-danger btn-sm">AddTracker</a></th>
+                    </tr>
+                </thead>
+
+            </table>
+        </div>
+
+    </div>
+</div>
+   <h2>Trackers Map</h2>
+    <div id="map" style="height: 500px;"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+    <script>var map = L.map('map').setView([51.505, -0.09], 13);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var marker = L.marker([51.5, -0.09]).addTo(map)
+            .bindPopup('A pretty CSS popup.<br> Easily customizable.')
+            .openPopup();
+
+        setInterval(function () {
+            // pobierz dane geolokalizacyjne z serwera i zaktualizuj pozycję markera
+            var lat = ... // pobierz współrzędną szerokości z serwera
+            var lng = ... // pobierz współrzędną długości z serwera
+            
+            marker.setLatLng([lat, lng]);
+                    }, 5000);</script>
+    <script>// inicjuj mapę Leaflet i ustaw jej widok na Polskę
+        var map = L.map('map').setView([52.3834, 16.9169], 16);
+
+        // dodaj kafelki z OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // dodaj marker wskazujący na dane miejsce
+        L.marker([52.3834, 16.9169]).addTo(map);</script>
+
+
+
+<script>function getRandomColor() {
+        // losowanie trzech liczb od 0 do 255, które będą kodem RGB
+        var r = Math.floor(Math.random() * 256);
+        var g = Math.floor(Math.random() * 256);
+        var b = Math.floor(Math.random() * 256);
+
+        // zwracanie koloru jako stringu w formacie RGB
+        return "rgb(" + r + ", " + g + ", " + b + ")";
+    }
+
+    // funkcja zmieniająca kolor przycisku na losowy
+    function changeButtonColor(buttonId) {
+        var button = document.getElementById(buttonId);
+        button.style.backgroundColor = getRandomColor();
+    }
+
+    // zmiana kolorów co 100ms
+    setInterval(function () {
+        changeButtonColor("btn btn-primary btn-sm");
+        changeButtonColor("btn btn-danger btn-sm");
+    }, 500);</script>

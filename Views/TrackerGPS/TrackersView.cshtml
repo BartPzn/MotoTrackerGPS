@@ -1,0 +1,56 @@
+﻿@model TrackerViewModel
+
+<h1>@Model.Tracker.TrackerName</h1>
+
+<div id="map" style="height: 500px"></div>
+
+<h2>Latest position:</h2>
+<p>Latitude: @Model.LatestPosition.Latitude</p>
+<p>Longitude: @Model.LatestPosition.Longitude</p>
+
+<h2>Position history:</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Timestamp</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var position in Model.PositionHistory)
+        {
+            <tr>
+                <td>@position.Timestamp</td>
+                <td>@position.Latitude</td>
+                <td>@position.Longitude</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // create map with default view centered on the latest position of the tracker
+        var map = L.map('map').setView([@Model.LatestPosition.Latitude, @Model.LatestPosition.Longitude], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // add marker for the latest position of the tracker
+        var latestMarker = L.marker([@Model.LatestPosition.Latitude, @Model.LatestPosition.Longitude]).addTo(map);
+        latestMarker.bindPopup("<b>Latest position</b><br>Latitude: " + @Model.LatestPosition.Latitude + "<br>Longitude: " + @Model.LatestPosition.Longitude);
+
+        // add polyline for the position history of the tracker
+        @foreach (var position in Model.PositionHistory)
+{
+    @Html.Raw("[" + position.Latitude + ", " + position.Longitude + "]" + (position != Model.PositionHistory.Last() ? "," : ""))
+}
+
+
+
+        // fit map view to show both the latest position marker and position history polyline
+        map.fitBounds(latestMarker.getBounds().extend(historyPolyline.getBounds()));
+    </script>
+}

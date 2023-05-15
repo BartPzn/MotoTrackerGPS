@@ -1,0 +1,33 @@
+﻿@model IEnumerable<MotoTrackerGps.TrackersGPS.TrackerGPS>
+
+
+<h1>Tracker List</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Model</th>
+            <th>Description</th>
+            <th>IMEI</th>
+            <th>IP Address</th>
+            <th>Tracker Port</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var tracker in Model)
+        {
+            <tr>
+                <td>@tracker.ID</td>
+                <td>@tracker.TrackerName</td>
+                <td>@tracker.Description</td>
+                <td>@tracker.Imei</td>
+                <td>@tracker.TrackerIP</td>
+                <td>@tracker.TrackerPort</td>
+                <td><a asp-action="TrackerView" asp-route-id="@tracker.ID">View</a></td>
+                <td><a asp-action="EditTracker" asp-route-id="@tracker.ID">Edit</a></td>
+                <td><a asp-action="DeleteTracker" asp-route-id="@tracker.ID">Delete</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

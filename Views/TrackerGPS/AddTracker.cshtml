@@ -1,0 +1,29 @@
+﻿@model MotoTrackerGps.TrackersGPS.TrackerGPS
+
+<h1>Add new tracker</h1>
+
+<form method="post" asp-action="AddTracker">
+    <div class="form-group">
+        <label asp-for="TrackerName">Name:</label>
+        <input asp-for="TrackerName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Description">Description:</label>
+        <input asp-for="Description" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Imei">Imei Number:</label>
+        <input asp-for="Imei" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="TrackerIP">Tracker IP:</label>
+        <input asp-for="TrackerIP" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="TrackerPort">Tracker Port:</label>
+        <input asp-for="TrackerPort" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Add</button>
+    
+</form>
